@@ -2,4 +2,4 @@
 
 cp bugs.json bugs.json.tmp
 mv bugs1.json bugs.json
-cp bugs.json.tmp bugs1.json
+mv bugs.json.tmp bugs1.json

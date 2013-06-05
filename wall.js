@@ -1,7 +1,8 @@
 var wall = {
-    "moduleNames": [],
-    "fadeTime": 5000,
-    "dims": [
+    "boxNames": [],
+    "updateInterval": 3 * 1000, // how often to update the next box
+    "fadeTime": 5000, // unsued
+    "dims": [ // layout of the boxes
         {"rows":0,"cols":0},
         {"rows":1,"cols":1},
         {"rows":1,"cols":2},
@@ -10,58 +11,79 @@ var wall = {
         {"rows":2,"cols":3},
         {"rows":2,"cols":3}
     ],
-    "statuses":{"red":"btn-danger","green":"btn-success","amber":"btn-warning"},
+    "statuses":{"red":"btn-danger","green":"btn-success","amber":"btn-warning","none":"btn-inverse"},
+    "currentBoxName": "",
     "html":{},
     "start": function() {
+        this.currentBoxName=this.boxNames[0];
+        for (var i=0; i < this.boxNames.length;i++) {
+            var boxName=this.boxNames[i];
+            var html = this.format("none", "", "Loading...", "");
+            $("body").append("<div id='" + boxName +"0'>"+html+"</div>");
+            //$("body").append("<div id='" + boxName +"1' style='display:none;'>Loading...</div>");
+            this.html[boxName]=html;
+            //this.updateNextBox();
+        }
+       setInterval(function() {wall.updateNextBox();}, this.updateInterval);
+       $(window).resize(function() {wall.resize();});
+       this.resize();
+    },
+    "resize":function() {
         this.width=$(window).width();
         this.height=$(window).height();
-        for (var i=0; i < this.moduleNames.length;i++) {
-            var moduleName=this.moduleNames[i];
-            var geo=this.getGeo(i);
-            //console.log(geo);
-            var style = "position:absolute;left:"+geo.x+"px;top:"+geo.y+"px;width:"+geo.w+"px;height:"+geo.h+"px;";
-            $("body").append("<div id='" + moduleName +"0' style='" + style+"'>Loading...</div>");
-            $("body").append("<div id='" + moduleName +"1' style='" + style+"display:none;'>Loading...</div>");
-            this.html[moduleName]="";
-        }
-        this.updateModules();
-        setInterval(function() {wall.updateModules();}, 10000);
-    },
-    "updateModules": function() {
-        for (var i=0; i < this.moduleNames.length;i++) {
-            var moduleName=this.moduleNames[i];
-            this.updateModule(moduleName);
+        for (var i=0; i < this.boxNames.length;i++) {
+            var boxName=this.boxNames[i];
+            var style = this.getStyle(i);
+            $("#" + boxName +"0").attr("style", this.getStyle(i));
         }
     },
-    "updateModule": function(moduleName) {
+    "getStyle":function(i) {
+        var geo=this.getGeo(i);
+        //console.log(geo);
+        return "position:absolute;left:"+geo.x+"px;top:"+geo.y+"px;width:"+geo.w+"px;height:"+geo.h+"px;";
+    },
+    "updateNextBox": function() {
         // add random to prevent caching
-        $.getJSON(moduleName + '.json?random' + Math.random(), function(module) {
-            var i=$("#" + module.name +"0").is(":visible")?1:0;
-            console.log(moduleName+" "+i)
-            var to="#" + module.name +""+i;
-            var from="#" + module.name +""+(1-i);
-            var html1=wall.htmlFor(module);
-            if (wall.html[module.name] != html1){
-                $(to).html(html1);
-                $(from).fadeOut(this.fadeTime);
-                $(to).fadeIn(this.fadeTime);
-            }
-        }).error(function(xhr, status, e) {alert(e);});
+        $.getJSON(this.currentBoxName + '.json?random' + Math.random(), function(box) {
+            wall.setCurrentHtml(wall.htmlFor(box));
+        }).error(function(xhr, status, e) {
+            wall.setCurrentHtml(wall.format("red","",e,""));
+        }).always(function() {
+            wall.currentBoxName=wall.getNextBoxName();
+            //console.log(wall.currentBoxName);
+        });
     },
-    "indexOf": function(moduleName) {
-        for (var i=0;i<this.moduleNames.length;i++){
-            if (this.moduleNames[i]==moduleName){return i;}
+    "setCurrentHtml":function(html) {
+        var i=$("#" + wall.currentBoxName +"0").is(":visible")?1:0;
+        var to="#" + wall.currentBoxName +""+0;
+            //var from="#" + box.name +""+(1-i);
+        if (wall.html[wall.currentBoxName] != html){
+            wall.html[wall.currentBoxName] = html;
+            $(to).html(html);
+            // $(from).fadeOut(this.fadeTime);
+            // $(to).fadeIn(this.fadeTime);
         }
     },
-    "htmlFor": function(module) {
-        return "<table class='pane "+this.statuses[module.status]+"'>" +
-            "<tr><td class='header'>" + module.header + "</td></tr>" +
-            "<tr><td class='body'>"+ module.body + "</td></tr>" +
-            "<tr><td class='footer'>" + module.footer + "</td></tr>"+
-        "</table>";
+    "getNextBoxName":function() {
+        return this.boxNames[(this.indexOf(this.currentBoxName) + 1) % this.boxNames.length];
+    },
+    "indexOf": function(boxName) {
+        for (var i=0;i<this.boxNames.length;i++){
+            if (this.boxNames[i]==boxName){return i;}
+        }
+    },
+    "htmlFor": function(box) {
+        return this.format(box.status,box.header,box.body,box.footer);
+    },
+    "format": function(status,header,body,footer){
+        return "<table class='box "+this.statuses[status]+"'>" +
+                "<tr><td class='header'>" + header + "</td></tr>" +
+                "<tr><td class='body'>"+ body + "</td></tr>" +
+                "<tr><td class='footer'>" + footer + "</td></tr>"+
+            "</table>"
     },
     "getGeo": function(i) {
-        var d=this.dims[this.moduleNames.length];
+        var d=this.dims[this.boxNames.length];
         //console.log(d);
         return{
             "x": (this.width-2)/d.cols*parseInt(i%d.cols),

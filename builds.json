@@ -1,7 +1,6 @@
 {
-    "name": "builds",
     "header": "Builds",
     "body": "<span class='xx-large'>fitnesse</span>",
     "footer": "10 tests failing for 30 mins, <br/>blame Alex",
-    "status": "red"
+    "status": "red"  333
 }

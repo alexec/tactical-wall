@@ -1,7 +1,6 @@
 {
-    "name": "bugs",
     "header": "Bugs",
-    "body": "<span class='xx-large'><span class='arrow'>&darr;</span>2</span>/10",
+    "body": "<span class='xx-large'><span class='arrow'>&uarr;</span>4</span>/10",
     "footer": "MTTF 3 days",
-    "status": "green"
+    "status": "amber"
 }
