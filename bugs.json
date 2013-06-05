@@ -1,0 +1,7 @@
+{
+    "name": "bugs",
+    "header": "Bugs",
+    "body": "<span class='xx-large'><span class='arrow'>&uarr;</span>4</span>/10",
+    "footer": "MTTF 3 days",
+    "status": "amber"
+}
