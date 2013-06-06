@@ -1,0 +1,26 @@
+table {
+    width:100%;
+    height:100%;
+}
+.box {
+    border: white solid thin;
+    width:100%;
+    height:100%;
+}
+.header, .body, .footer {
+    text-align: center;
+    vertical-align;center;
+}
+.header {}
+.body {}
+.footer {}
+.x-large {
+    font-size: 400%;
+}
+.arrow {
+    font-size: 70%;
+    vertical-align:top;
+}
+.xx-large {
+    font-size: 600%;
+}
