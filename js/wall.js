@@ -1,7 +1,7 @@
 var wall = {
     "boxNames": [],
     "updateInterval": 3 * 1000, // how often to update the next box
-    "fadeTime": 5000, // unsued
+    "fadeTime": 5000, // unused
     "dims": [ // layout of the boxes
         {"rows":0,"cols":0},
         {"rows":1,"cols":1},
@@ -19,7 +19,7 @@ var wall = {
         for (var i=0; i < this.boxNames.length;i++) {
             var boxName=this.boxNames[i];
             var html = this.format("none", "", "Loading...", "");
-            $("body").append("<div id='" + boxName +"0'>"+html+"</div>");
+            $("body").append("<div id='" + boxName.replace('/', "_") +"0'>"+html+"</div>");
             //$("body").append("<div id='" + boxName +"1' style='display:none;'>Loading...</div>");
             this.html[boxName]=html;
             //this.updateNextBox();
@@ -34,7 +34,7 @@ var wall = {
         for (var i=0; i < this.boxNames.length;i++) {
             var boxName=this.boxNames[i];
             var style = this.getStyle(i);
-            $("#" + boxName +"0").attr("style", this.getStyle(i));
+            $("#" + boxName.replace('/', "_") +"0").attr("style", this.getStyle(i));
         }
     },
     "getStyle":function(i) {
@@ -44,18 +44,18 @@ var wall = {
     },
     "updateNextBox": function() {
         // add random to prevent caching
-        $.getJSON(this.currentBoxName + '.json?random' + Math.random(), function(box) {
+        $.getJSON("boxes/" + this.currentBoxName + '.json?random' + Math.random(), function(box) {
             wall.setCurrentHtml(wall.htmlFor(box));
         }).error(function(xhr, status, e) {
-            wall.setCurrentHtml(wall.format("red","",e,""));
+            wall.setCurrentHtml(wall.format("none","",e,""));
         }).always(function() {
             wall.currentBoxName=wall.getNextBoxName();
             //console.log(wall.currentBoxName);
         });
     },
     "setCurrentHtml":function(html) {
-        var i=$("#" + wall.currentBoxName +"0").is(":visible")?1:0;
-        var to="#" + wall.currentBoxName +""+0;
+        var i=$("#" + wall.currentBoxName.replace('/', "_") +"0").is(":visible")?1:0;
+        var to="#" + wall.currentBoxName.replace('/', "_") +""+0;
             //var from="#" + box.name +""+(1-i);
         if (wall.html[wall.currentBoxName] != html){
             wall.html[wall.currentBoxName] = html;
