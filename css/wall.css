@@ -9,11 +9,14 @@ table {
 }
 .header, .body, .footer {
     text-align: center;
-    vertical-align;center;
+    vertical-align: middle;
 }
 .header {}
 .body {}
 .footer {}
+.large {
+    font-size: 200%;
+}
 .x-large {
     font-size: 400%;
 }

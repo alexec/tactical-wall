@@ -24,6 +24,7 @@ var wall = {
             this.html[boxName]=html;
             //this.updateNextBox();
         }
+        this.updateNextBox();
        setInterval(function() {wall.updateNextBox();}, this.updateInterval);
        $(window).resize(function() {wall.resize();});
        this.resize();
@@ -47,7 +48,8 @@ var wall = {
         $.getJSON("boxes/" + this.currentBoxName + '.json?random' + Math.random(), function(box) {
             wall.setCurrentHtml(wall.htmlFor(box));
         }).error(function(xhr, status, e) {
-            wall.setCurrentHtml(wall.format("none","",e,""));
+                //console.log(xhr)
+            wall.setCurrentHtml(wall.format("none",wall.currentBoxName, status + " " + xhr.status + "<br/>"  +e + "<br/>" + xhr.responseText,""));
         }).always(function() {
             wall.currentBoxName=wall.getNextBoxName();
             //console.log(wall.currentBoxName);
