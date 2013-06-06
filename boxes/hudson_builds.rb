@@ -47,7 +47,7 @@ if broken.length > 0 then
   puts "\"footer\": \"\","
   puts "\"status\": \"red\""
 elsif stable.length > 0
-  puts "\"body\": \"OK\","
+  puts "\"body\": \"<span class='xx-large'>OK</span>\","
   puts "\"footer\": \"#{stable.length} stable\","
   puts "\"status\": \"green\""
 else
