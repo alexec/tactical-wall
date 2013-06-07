@@ -21,7 +21,7 @@ doc.elements.each('/feed/entry/title') do |ele|
   m=/(.*) (#[0-9]+) \(([^ ]*).*\)/.match(title)
   name=m[1]
   buildNo=m[2]
-  status=title =~/back to normal/ ? 'stable' : title =~ /started to fail/ ? 'broken' : m[3] == '?' ? 'unknown' : m[3]
+  status=title =~/back to normal/ ? 'stable' : title =~ /fail/ ? 'broken' : m[3] == '?' ? 'unknown' : m[3]
 
   # puts "#{title}, #{name}, #{status}"
 
